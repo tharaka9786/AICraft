@@ -39,7 +39,7 @@ pool.query(`
 // Middleware for basic admin auth
 const checkAuth = (req, res, next) => {
     const pass = req.headers['authorization'];
-    if (pass === 'aicraft_admin_secret') {
+    if (pass === 'aicraft_12@') {
         next();
     } else {
         res.status(401).json({ error: "Unauthorized. Incorrect password." });
