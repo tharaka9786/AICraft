@@ -269,5 +269,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function fetchAndDisplayVideos() {
+        try {
+            const response = await fetch('/api/videos');
+            if (!response.ok) return;
+            const videos = await response.json();
+            
+            const videoGrid = document.getElementById('public-video-grid');
+            if (videos.length === 0) {
+                videoGrid.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">New videos coming soon...</p>';
+                return;
+            }
+
+            let videosHtml = '';
+            videos.forEach(video => {
+                videosHtml += `
+                    <div class="video-card reveal">
+                        <div class="video-iframe-container">
+                            <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-card-title">${video.title || 'Video Project'}</div>
+                    </div>
+                `;
+            });
+            videoGrid.innerHTML = videosHtml;
+            // Re-trigger reveal logic for newly added items
+            reveal(); 
+        } catch (error) {
+            console.error('Failed to fetch videos:', error);
+        }
+    }
+
     fetchAndDisplayRatings();
+    fetchAndDisplayVideos();
 });
