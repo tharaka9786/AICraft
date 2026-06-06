@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICraft | AI-Driven Video Production</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="bg-glow top-glow"></div>
+    <div class="bg-glow bottom-glow"></div>
+
+    <nav id="navbar" class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo-link">
+                <img src="logo.png" alt="AICraft Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\'><text x=\'5\' y=\'16\' fill=\'white\' font-family=\'sans-serif\' font-size=\'14\'>AI</text></svg>'">
+            </a>
+            
+            <div class="nav-links desktop-nav">
+                <a href="#services">Services</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+
+            <div class="nav-connect desktop-only">
+                <a href="#contact" class="btn-outline">Connect</a>
+            </div>
+
+            <div class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="ph ph-list"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="mobile-menu">
+        <a href="#services" class="mobile-link">Services</a>
+        <a href="#about" class="mobile-link">About</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+
+    <!-- Canvas for 3D Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <section id="home" class="hero-section">
+        <div class="container hero-content">
+            <div class="badge reveal">
+                <span class="pulse-dot"></span> Next-Gen Video Architecture
+            </div>
+            <h1 class="hero-title reveal reveal-delay-1">
+                Elevate Your Brand With <br>
+                <span class="text-gradient">AICraft.</span>
+            </h1>
+            <p class="hero-description reveal reveal-delay-2">
+                We craft stunning, highly-engaging videos for businesses using cutting-edge AI technology. Stand out in the digital landscape with cinematic edits and viral formats.
+            </p>
+            <div class="hero-actions reveal reveal-delay-3">
+                <a href="#services" class="btn-fluid">Explore Packages <i class="ph ph-arrow-down"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header reveal-scale">
+                <h2>Production <span class="text-accent">Packages</span></h2>
+                <p>Tailored video solutions engineered for maximum engagement and reach.</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card glass-panel reveal">
+                    <div class="card-icon">
+                        <i class="ph ph-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Tuition Classes</h3>
+                    <p>Dynamic promotional videos designed to attract students. Showcase your teaching style, success rates, and modern facilities with high-retention edits.</p>
+                    <div class="price">Rs. 500 <span>/ video</span></div>
+                    <a href="https://wa.me/qr/Y6Z6UUZM5H7RA1" target="_blank" class="book-btn">Book Now <i class="ph ph-arrow-right"></i></a>
+                </div>
+
+                <div class="service-card glass-panel reveal reveal-delay-1">
+                    <div class="card-icon">
+                        <i class="ph ph-storefront"></i>
+                    </div>
+                    <h3>Small Businesses</h3>
+                    <p>Elevate your local business with professional showcase videos. Perfect for social media marketing, product highlights, and brand storytelling.</p>
+                    <div class="price">Rs. 500 <span>/ video</span></div>
+                    <a href="https://wa.me/qr/Y6Z6UUZM5H7RA1" target="_blank" class="book-btn">Book Now <i class="ph ph-arrow-right"></i></a>
+                </div>
+
+                <div class="service-card glass-panel reveal reveal-delay-2">
+                    <div class="card-icon">
+                        <i class="ph ph-film-strip"></i>
+                    </div>
+                    <h3>Event & Custom Videos</h3>
+                    <p>Cinematic event highlights and versatile video formats tailored to any specific requirement. Professional grading, VFX, and pacing.</p>
+                    <div class="price">Rs. 500 <span>/ video</span></div>
+                    <a href="https://wa.me/qr/Y6Z6UUZM5H7RA1" target="_blank" class="book-btn">Book Now <i class="ph ph-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rating" class="rating-section">
+        <div class="container">
+            <div class="section-header reveal-scale">
+                <h2>Client <span class="text-accent">Feedback</span></h2>
+                <p>We value your experience. Let us know how we did!</p>
+            </div>
+            
+            <div class="rating-overview reveal" id="rating-overview" style="display: none;">
+                <div class="avg-score" id="avg-score">0.0</div>
+                <div class="avg-stars" id="avg-stars"></div>
+                <div class="total-reviews" id="total-reviews">Based on 0 reviews</div>
+            </div>
+
+            <div class="recent-reviews-grid reveal reveal-delay-1" id="recent-reviews">
+                <!-- Reviews will be injected here via JS -->
+            </div>
+            
+            <div class="rating-container glass-panel reveal reveal-delay-2">
+                <h3>Leave your rating</h3>
+                <div class="stars" id="star-rating">
+                    <i class="ph ph-star" data-value="1"></i>
+                    <i class="ph ph-star" data-value="2"></i>
+                    <i class="ph ph-star" data-value="3"></i>
+                    <i class="ph ph-star" data-value="4"></i>
+                    <i class="ph ph-star" data-value="5"></i>
+                </div>
+                
+                <div class="feedback-form" id="feedback-form" style="display: none;">
+                    <textarea id="feedback-comment" placeholder="Tell us more about your experience (optional)..." rows="3"></textarea>
+                    <button id="submit-rating" class="btn-fluid mt-4">Submit Rating <i class="ph ph-paper-plane-tilt"></i></button>
+                </div>
+                
+                <div id="rating-success" class="rating-success" style="display: none;">
+                    <i class="ph ph-check-circle"></i>
+                    <p>Thank you for your rating!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container contact-container">
+            <div class="contact-text reveal-left">
+                <div class="badge">
+                    <span class="pulse-dot green"></span> Open For Projects
+                </div>
+                <h2>Connect With <br><span class="text-accent">AICraft</span></h2>
+                <p>Ready to transform your visual identity? Reach out through our dedicated channels for inquiries, custom quotes, or to start your next big project.</p>
+                <a href="mailto:deepalgunarathana@gmail.com" class="btn-fluid mt-4">
+                    Email Us <i class="ph ph-paper-plane-tilt"></i>
+                </a>
+            </div>
+
+            <div class="social-links-grid reveal-right reveal-delay-1">
+                <a href="https://www.facebook.com/share/18hokcpkEn/" target="_blank" class="social-card facebook">
+                    <i class="ph ph-facebook-logo"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://youtube.com/@heartlogic-e1w?si=xUS_CskF_xNRtyP5" target="_blank" class="social-card youtube">
+                    <i class="ph ph-youtube-logo"></i>
+                    <span>YouTube</span>
+                </a>
+                <a href="https://wa.me/qr/Y6Z6UUZM5H7RA1" target="_blank" class="social-card whatsapp">
+                    <i class="ph ph-whatsapp-logo"></i>
+                    <span>WhatsApp</span>
+                </a>
+                <a href="mailto:deepalgunarathana@gmail.com" class="social-card gmail">
+                    <i class="ph ph-envelope-simple"></i>
+                    <span>Gmail</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <a href="https://wa.me/qr/Y6Z6UUZM5H7RA1" target="_blank" class="floating-whatsapp" title="Chat on WhatsApp">
+        <i class="ph ph-whatsapp-logo"></i>
+    </a>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="logo.png" alt="AICraft Logo" class="footer-logo-img" onerror="this.style.display='none'">
+                <span>AICraft</span>
+            </div>
+            <p class="copyright">&copy; <span id="year"></span> AICraft. Designed by janaka.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

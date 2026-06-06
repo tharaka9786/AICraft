@@ -1,0 +1,273 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    const menuIcon = mobileMenuBtn.querySelector('i');
+
+    let isMenuOpen = false;
+
+    function toggleMenu() {
+        isMenuOpen = !isMenuOpen;
+        if (isMenuOpen) {
+            mobileMenu.classList.add('active');
+            menuIcon.classList.remove('ph-list');
+            menuIcon.classList.add('ph-x');
+            document.body.style.overflow = 'hidden';
+        } else {
+            mobileMenu.classList.remove('active');
+            menuIcon.classList.remove('ph-x');
+            menuIcon.classList.add('ph-list');
+            document.body.style.overflow = '';
+        }
+    }
+
+    mobileMenuBtn.addEventListener('click', toggleMenu);
+
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (isMenuOpen) toggleMenu();
+        });
+    });
+
+    // Navbar Scroll Effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Scroll Reveal Animation
+    function reveal() {
+        const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+        for (let i = 0; i < reveals.length; i++) {
+            const windowHeight = window.innerHeight;
+            const elementTop = reveals[i].getBoundingClientRect().top;
+            const elementVisible = 100;
+
+            if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add('active');
+            }
+        }
+    }
+
+    window.addEventListener('scroll', reveal);
+    reveal(); // Trigger on load
+
+    // Set Current Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Canvas Background Animation
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.size = Math.random() * 2;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.speedY = Math.random() * 0.5 - 0.25;
+            this.opacity = Math.random() * 0.5 + 0.1;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x < 0 || this.x > width) this.speedX *= -1;
+            if (this.y < 0 || this.y > height) this.speedY *= -1;
+        }
+        draw() {
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        particles = [];
+        const numParticles = Math.floor((width * height) / 15000);
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    initParticles();
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            
+            // Draw lines between close particles
+            for (let j = i; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance/1000})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+
+    // Rating System Logic
+    const stars = document.querySelectorAll('#star-rating i');
+    const feedbackForm = document.getElementById('feedback-form');
+    const submitBtn = document.getElementById('submit-rating');
+    const feedbackComment = document.getElementById('feedback-comment');
+    const ratingSuccess = document.getElementById('rating-success');
+    let selectedRating = 0;
+
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+            const val = this.getAttribute('data-value');
+            highlightStars(val);
+        });
+
+        star.addEventListener('mouseout', function() {
+            highlightStars(selectedRating);
+        });
+
+        star.addEventListener('click', function() {
+            selectedRating = this.getAttribute('data-value');
+            highlightStars(selectedRating);
+            feedbackForm.style.display = 'flex'; // Show comment box
+        });
+    });
+
+    function highlightStars(val) {
+        stars.forEach(star => {
+            if (star.getAttribute('data-value') <= val) {
+                star.classList.add('ph-fill');
+                star.classList.add('active');
+            } else {
+                star.classList.remove('ph-fill');
+                star.classList.remove('active');
+            }
+        });
+    }
+
+    submitBtn.addEventListener('click', async () => {
+        if (selectedRating === 0) return;
+
+        const comment = feedbackComment.value;
+        submitBtn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Submitting...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/ratings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ stars: selectedRating, comment: comment })
+            });
+
+            if (response.ok) {
+                feedbackForm.style.display = 'none';
+                document.getElementById('star-rating').style.display = 'none';
+                document.querySelector('.rating-container h3').style.display = 'none';
+                ratingSuccess.style.display = 'flex';
+                fetchAndDisplayRatings(); // Refresh ratings display
+            } else {
+                alert("Failed to submit rating. Please try again.");
+                submitBtn.innerHTML = 'Submit Rating <i class="ph ph-paper-plane-tilt"></i>';
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert("An error occurred. Please try again.");
+            submitBtn.innerHTML = 'Submit Rating <i class="ph ph-paper-plane-tilt"></i>';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Fetch and display ratings
+    async function fetchAndDisplayRatings() {
+        try {
+            const response = await fetch('/api/ratings');
+            if (!response.ok) return;
+            const ratings = await response.json();
+            
+            if (ratings.length > 0) {
+                document.getElementById('rating-overview').style.display = 'block';
+                
+                // Calculate Average
+                const total = ratings.reduce((sum, r) => sum + r.stars, 0);
+                const avg = (total / ratings.length).toFixed(1);
+                
+                document.getElementById('avg-score').textContent = avg;
+                document.getElementById('total-reviews').textContent = `Based on ${ratings.length} review${ratings.length !== 1 ? 's' : ''}`;
+                
+                // Render Average Stars
+                let avgStarsHtml = '';
+                const fullStars = Math.floor(avg);
+                const hasHalfStar = avg - fullStars >= 0.5;
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= fullStars) {
+                        avgStarsHtml += '<i class="ph-fill ph-star"></i>';
+                    } else if (i === fullStars + 1 && hasHalfStar) {
+                        avgStarsHtml += '<i class="ph-fill ph-star-half"></i>';
+                    } else {
+                        avgStarsHtml += '<i class="ph ph-star"></i>';
+                    }
+                }
+                document.getElementById('avg-stars').innerHTML = avgStarsHtml;
+
+                // Render Recent Reviews (up to 3 with comments)
+                const reviewsWithComments = ratings.filter(r => r.comment && r.comment.trim() !== '');
+                const recentReviews = reviewsWithComments.slice(0, 3);
+                
+                const reviewsGrid = document.getElementById('recent-reviews');
+                if (recentReviews.length > 0) {
+                    let reviewsHtml = '';
+                    recentReviews.forEach(r => {
+                        let starsHtml = '';
+                        for(let i=1; i<=5; i++) {
+                            starsHtml += `<i class="${i <= r.stars ? 'ph-fill' : 'ph'} ph-star"></i>`;
+                        }
+                        reviewsHtml += `
+                            <div class="review-card">
+                                <div class="stars">${starsHtml}</div>
+                                <div class="review-comment">"${r.comment.replace(/</g, "&lt;").replace(/>/g, "&gt;")}"</div>
+                            </div>
+                        `;
+                    });
+                    reviewsGrid.innerHTML = reviewsHtml;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to fetch ratings:', error);
+        }
+    }
+
+    fetchAndDisplayRatings();
+});
