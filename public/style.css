@@ -327,8 +327,8 @@ a {
     transition-timing-function: linear !important; /* Forces linear smooth scrolling */
 }
 .swiper-slide {
-    width: 360px; /* Fixed width for each video card */
-    max-width: 90vw; /* Responsive on small screens */
+    width: 280px; /* Smaller fixed width for each video card */
+    max-width: 85vw; /* Responsive on small screens */
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
