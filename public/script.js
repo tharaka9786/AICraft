@@ -282,7 +282,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             let videosHtml = '';
-            videos.forEach(video => {
+            const initialVideos = videos.slice(0, 3);
+            
+            initialVideos.forEach(video => {
                 videosHtml += `
                     <div class="video-card reveal-left">
                         <div class="video-iframe-container">
@@ -293,8 +295,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             });
             videoGrid.innerHTML = videosHtml;
+            
             // Re-trigger reveal logic for newly added items
             reveal(); 
+
+            // Add Show More button if there are more than 3 videos
+            if (videos.length > 3) {
+                const showMoreContainer = document.createElement('div');
+                showMoreContainer.style.textAlign = 'center';
+                showMoreContainer.style.marginTop = '24px';
+                showMoreContainer.style.gridColumn = '1 / -1'; // span full width of grid
+
+                const showMoreBtn = document.createElement('button');
+                showMoreBtn.className = 'btn-outline';
+                showMoreBtn.style.cursor = 'pointer';
+                showMoreBtn.innerHTML = 'Show More <i class="ph ph-caret-down"></i>';
+                
+                showMoreBtn.addEventListener('click', () => {
+                    const remainingVideos = videos.slice(3);
+                    let extraHtml = '';
+                    remainingVideos.forEach(video => {
+                        extraHtml += `
+                            <div class="video-card reveal-left">
+                                <div class="video-iframe-container">
+                                    <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <div class="video-card-title">${video.title || 'Video Project'}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    showMoreContainer.remove(); // Remove button
+                    videoGrid.insertAdjacentHTML('beforeend', extraHtml); // Append rest
+                    
+                    setTimeout(() => reveal(), 50); // Trigger animation for new ones
+                });
+
+                showMoreContainer.appendChild(showMoreBtn);
+                videoGrid.appendChild(showMoreContainer);
+            }
         } catch (error) {
             console.error('Failed to fetch videos:', error);
         }
