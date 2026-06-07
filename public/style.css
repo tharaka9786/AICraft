@@ -792,30 +792,49 @@ a {
 
 /* Visit Counter */
 .visit-counter {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
+    background: rgba(59, 130, 246, 0.15); /* var(--accent-blue) with opacity */
+    border: 1px solid var(--accent-blue);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.9rem;
-    color: var(--text-secondary);
+    color: var(--accent-blue);
     backdrop-filter: blur(10px);
-    margin-bottom: 16px;
     transition: all 0.3s ease;
+    z-index: 20;
 }
 .visit-counter i {
-    color: var(--primary-blue);
+    color: var(--accent-blue);
     font-size: 1.2rem;
 }
 .visit-counter:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-    color: var(--text-primary);
+    background: rgba(59, 130, 246, 0.25);
+    transform: translateY(-50%) scale(1.05);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+.visit-counter:hover i {
+    color: #fff;
 }
 .visit-count-display {
     font-weight: 600;
-    color: var(--text-primary);
+    color: #fff;
     font-family: 'Outfit', sans-serif;
+}
+
+@media (max-width: 768px) {
+    .visit-counter {
+        position: static;
+        transform: none;
+        margin-bottom: 16px;
+    }
+    .visit-counter:hover {
+        transform: scale(1.05);
+    }
 }
