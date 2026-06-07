@@ -409,4 +409,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     updateVisits();
+    // Fetch and display dynamic prices
+    async function fetchPublicPrices() {
+        try {
+            const response = await fetch('/api/settings/prices');
+            if (response.ok) {
+                const prices = await response.json();
+                
+                const tui = document.getElementById('price-tuition-display');
+                if (tui && prices.price_tuition) tui.innerText = prices.price_tuition;
+                
+                const sb = document.getElementById('price-smallbiz-display');
+                if (sb && prices.price_smallbiz) sb.innerText = prices.price_smallbiz;
+                
+                const cust = document.getElementById('price-custom-display');
+                if (cust && prices.price_custom) cust.innerText = prices.price_custom;
+            }
+        } catch (error) {
+            console.error('Failed to fetch prices:', error);
+        }
+    }
+    fetchPublicPrices();
 });

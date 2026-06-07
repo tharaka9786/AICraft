@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     authSection.style.display = 'none';
                     dashboardSection.style.display = 'block';
                     fetchVideos();
+                    fetchPrices();
                 } else {
                     alert('Incorrect password! Please try again.');
                 }
@@ -354,4 +355,55 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Network error');
         }
     });
+
+    // --- Package Pricing Logic ---
+    async function fetchPrices() {
+        try {
+            const response = await fetch('/api/settings/prices');
+            if (response.ok) {
+                const prices = await response.json();
+                document.getElementById('price-tuition-input').value = prices.price_tuition || '500';
+                document.getElementById('price-smallbiz-input').value = prices.price_smallbiz || '500';
+                document.getElementById('price-custom-input').value = prices.price_custom || '500';
+            }
+        } catch (error) {
+            console.error('Error fetching prices:', error);
+        }
+    }
+
+    const updatePricesBtn = document.getElementById('update-prices-btn');
+    if (updatePricesBtn) {
+        updatePricesBtn.addEventListener('click', async () => {
+            const tuition = document.getElementById('price-tuition-input').value;
+            const smallbiz = document.getElementById('price-smallbiz-input').value;
+            const custom = document.getElementById('price-custom-input').value;
+
+            updatePricesBtn.innerText = 'Updating...';
+            try {
+                const response = await fetch('/api/settings/prices', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': adminToken
+                    },
+                    body: JSON.stringify({
+                        price_tuition: tuition,
+                        price_smallbiz: smallbiz,
+                        price_custom: custom
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Prices updated successfully!');
+                } else {
+                    alert('Failed to update prices.');
+                }
+            } catch (error) {
+                console.error('Error updating prices:', error);
+                alert('Network error');
+            } finally {
+                updatePricesBtn.innerText = 'Update Prices';
+            }
+        });
+    }
 });
