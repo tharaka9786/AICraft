@@ -1,0 +1,1 @@
+require('dotenv').config(); const { Pool } = require('pg'); const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }); pool.query('UPDATE site_stats SET total_visits = 0 WHERE id = 1;').then(() => { console.log('Visits reset successfully'); process.exit(0); }).catch(err => { console.error(err); process.exit(1); });
