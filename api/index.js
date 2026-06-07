@@ -154,15 +154,6 @@ app.post('/api/visits', async (req, res) => {
     }
 });
 
-app.get('/api/reset-visits-temp', async (req, res) => {
-    try {
-        await pool.query(`UPDATE site_stats SET total_visits = 0 WHERE id = 1`);
-        res.status(200).json({ message: "Visits reset successfully" });
-    } catch (err) {
-        res.status(500).json({ error: "Failed to reset" });
-    }
-});
-
 // Export the Express API for Vercel
 module.exports = app;
 
