@@ -293,6 +293,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (platform === 'facebook') {
                     const encodedUrl = encodeURIComponent(video.video_url);
                     iframeHtml = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&width=auto" style="border:none;overflow:hidden; height:100%; width:100%; position:absolute; top:0; left:0;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+                } else if (platform === 'google_drive') {
+                    const match = video.video_url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                        const fileId = match[1];
+                        iframeHtml = `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="100%" height="100%" style="border:none; position:absolute; top:0; left:0;" allow="autoplay" allowfullscreen></iframe>`;
+                    } else {
+                        iframeHtml = `<iframe src="${video.video_url}" width="100%" height="100%" style="border:none; position:absolute; top:0; left:0;" allow="autoplay" allowfullscreen></iframe>`;
+                    }
                 }
 
                 videosHtml += `

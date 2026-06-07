@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             videoUrl = url;
             if (!videoUrl) {
-                alert('Invalid Facebook URL');
+                alert('Invalid URL');
                 return;
             }
         }
@@ -213,7 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const item = document.createElement('div');
                 item.className = 'video-item';
                 const platform = video.platform || 'youtube';
-                const thumbUrl = platform === 'youtube' ? `https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg` : 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/512px-2021_Facebook_icon.svg.png';
+                let thumbUrl = `https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg`;
+                if (platform === 'facebook') thumbUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/512px-2021_Facebook_icon.svg.png';
+                else if (platform === 'google_drive') thumbUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/512px-Google_Drive_icon_%282020%29.svg.png';
                 
                 item.innerHTML = `
                     <div class="video-info">
@@ -287,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function openEditModal(video) {
         editVideoId.value = video.id;
         editVideoPlatform.value = video.platform || 'youtube';
-        editVideoUrl.value = (video.platform === 'facebook') ? video.video_url : `https://www.youtube.com/watch?v=${video.youtube_id}`;
+        editVideoUrl.value = (video.platform === 'facebook' || video.platform === 'google_drive') ? video.video_url : `https://www.youtube.com/watch?v=${video.youtube_id}`;
         editVideoTitle.value = video.title || '';
         
         editModal.style.display = 'block';
@@ -320,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             videoUrl = url;
             if (!videoUrl) {
-                alert('Invalid Facebook URL');
+                alert('Invalid URL');
                 return;
             }
         }
