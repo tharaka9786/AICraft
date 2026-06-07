@@ -6,7 +6,9 @@
     <title>AICraft | AI-Driven Video Production</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </head>
 <body>
     <div class="bg-glow top-glow"></div>
@@ -68,8 +70,10 @@
                 <p>Check out some of our recent high-converting video projects.</p>
             </div>
             
-            <div class="video-grid" id="public-video-grid">
-                <!-- Videos injected via JS -->
+            <div class="swiper video-swiper" style="overflow: hidden; padding: 20px 0;">
+                <div class="swiper-wrapper" id="public-video-grid">
+                    <!-- Videos injected via JS -->
+                </div>
             </div>
         </div>
     </section>

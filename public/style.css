@@ -319,21 +319,26 @@ a {
     box-shadow: 0 20px 40px 0 rgba(0,0,0,0.4);
 }
 
-/* Portfolio Video Grid */
-.video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 32px;
+/* Portfolio Video Carousel (Swiper) */
+.video-swiper {
+    width: 100%;
+}
+.video-swiper .swiper-wrapper {
+    transition-timing-function: linear !important; /* Forces linear smooth scrolling */
+}
+.swiper-slide {
+    width: 360px; /* Fixed width for each video card */
+    max-width: 90vw; /* Responsive on small screens */
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    transition: box-shadow 0.3s ease;
 }
 .video-card:hover {
-    transform: translateY(-8px);
     box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
 .video-card-title {
