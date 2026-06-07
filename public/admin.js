@@ -127,9 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Extract YouTube ID from URL
+    // Extract YouTube ID from URL or accept raw 11-char ID
     function extractVideoID(url) {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        if (!url) return null;
+        // If it's exactly 11 characters and has no URL symbols, assume it's a raw ID
+        if (url.length === 11 && !url.includes('/') && !url.includes('?')) return url;
+        
+        // Match standard URLs, embed URLs, and Shorts URLs
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
         const match = url.match(regExp);
         return (match && match[2].length === 11) ? match[2] : null;
     }
