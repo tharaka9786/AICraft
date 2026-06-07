@@ -279,8 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Inject the pinned promotional video at the very beginning
             videos.unshift({
-                platform: 'youtube',
-                youtube_id: 'S32ecAIHk48',
+                platform: 'google_drive',
+                video_url: 'https://drive.google.com/file/d/1ffyoeJWZ4L_4MZ8FQouwRvutbX4Eii1j/view?usp=drivesdk',
                 title: 'AICraft Promotional Video'
             });
 
