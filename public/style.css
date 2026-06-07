@@ -319,16 +319,11 @@ a {
     box-shadow: 0 20px 40px 0 rgba(0,0,0,0.4);
 }
 
-/* Portfolio Video Carousel (Swiper) */
-.video-swiper {
-    width: 100%;
-}
-.video-swiper .swiper-wrapper {
-    transition-timing-function: linear !important; /* Forces linear smooth scrolling */
-}
-.swiper-slide {
-    width: 240px; /* Restored to a visible width */
-    max-width: 70vw;
+/* Portfolio Video Grid */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
@@ -342,18 +337,15 @@ a {
     box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
 .video-card-title {
-    padding: 12px;
+    padding: 16px;
     font-weight: 500;
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .video-iframe-container {
     position: relative;
     width: 100%;
-    padding-bottom: 177.77%; /* 9:16 Aspect Ratio (Tightly wraps vertical videos) */
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
 }
 .video-iframe-container iframe {
     position: absolute;

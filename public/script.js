@@ -284,31 +284,17 @@ document.addEventListener('DOMContentLoaded', () => {
             let videosHtml = '';
             videos.forEach(video => {
                 videosHtml += `
-                    <div class="swiper-slide">
-                        <div class="video-card">
-                            <div class="video-iframe-container">
-                                <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div class="video-card-title">${video.title || 'Video Project'}</div>
+                    <div class="video-card reveal-left">
+                        <div class="video-iframe-container">
+                            <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
+                        <div class="video-card-title">${video.title || 'Video Project'}</div>
                     </div>
                 `;
             });
             videoGrid.innerHTML = videosHtml;
-            
-            // Initialize Swiper after injecting HTML
-            new Swiper('.video-swiper', {
-                loop: true,
-                speed: 5000,
-                slidesPerView: 'auto',
-                spaceBetween: 32,
-                autoplay: {
-                    delay: 0,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true,
-                },
-                grabCursor: true,
-            });
+            // Re-trigger reveal logic for newly added items
+            reveal(); 
         } catch (error) {
             console.error('Failed to fetch videos:', error);
         }
