@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     authSection.style.display = 'none';
                     dashboardSection.style.display = 'block';
                     fetchVideos();
-                    fetchAdminPrices();
+                    fetchPrices();
                     fetchAnalytics();
                 } else {
                     alert('Incorrect password! Please try again.');
