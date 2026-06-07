@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About AICraft | K. M Janaka gunarathna</title>
+    <link rel="stylesheet" href="style.css?v=11">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .about-section {
+            padding-top: 150px;
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+        .about-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 64px;
+            align-items: start;
+        }
+        .about-image-wrapper {
+            position: sticky;
+            top: 120px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .about-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .about-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, #a0a0a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .about-content h2 {
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+        .about-content p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .info-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 48px;
+        }
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 32px;
+            border-radius: 16px;
+        }
+        .info-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+        }
+        .info-card h3 i {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .info-card ul li {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .info-card ul li::before {
+            content: "•";
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        .vision-section {
+            margin-top: 48px;
+            background: linear-gradient(145deg, rgba(37, 99, 235, 0.1), rgba(15, 23, 42, 0.5));
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+        }
+        .vision-section i {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 16px;
+        }
+        .vision-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+        .vision-section p {
+            font-size: 1.2rem;
+            margin-bottom: 0;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+
+        @media (max-width: 992px) {
+            .about-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .about-image-wrapper {
+                position: relative;
+                top: 0;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            .about-content h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow top-glow"></div>
+    <div class="bg-glow bottom-glow"></div>
+
+    <nav id="navbar" class="navbar">
+        <div class="container nav-content">
+            <a href="/" class="logo-link">
+                <img src="logo.png" alt="AICraft Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\'><text x=\'5\' y=\'16\' fill=\'white\' font-family=\'sans-serif\' font-size=\'14\'>AI</text></svg>'">
+            </a>
+            
+            <div class="nav-links desktop-nav">
+                <a href="/">Home</a>
+                <a href="/#services">Services</a>
+                <a href="about.html" class="active">About</a>
+                <a href="/#contact">Contact</a>
+            </div>
+
+            <div class="nav-connect desktop-only">
+                <a href="/#contact" class="btn-outline">Connect</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="about-layout">
+                <div class="about-image-wrapper reveal-left">
+                    <img src="founder.png" alt="K. M Janaka gunarathna" class="about-image">
+                </div>
+                
+                <div class="about-content">
+                    <h1 class="reveal-right" style="transition-delay: 100ms;">K. M Janaka gunarathna</h1>
+                    <h2 class="reveal-right" style="transition-delay: 200ms;">Founder & Visionary, AICraft</h2>
+                    
+                    <div class="reveal-right" style="transition-delay: 300ms;">
+                        <p>AICraft is a creative AI-powered video production platform founded by K. M Janaka gunarathna, a final-year undergraduate student at the University of Kelaniya, currently pursuing a BA (Hons) in Economics.</p>
+                        
+                        <p>With a strong academic background in Economics, the founder brings a unique combination of analytical thinking and creative innovation to the digital content industry. This allows AICraft to not only focus on creativity but also understand market needs, business growth, and effective digital communication.</p>
+                        
+                        <p>AICraft was established with the vision of combining technology and creativity to create new business opportunities in the digital world. The motivation behind this platform is to provide innovative AI-based video solutions that support businesses, education, and personal branding in a more modern and efficient way.</p>
+                        
+                        <p>Through AI-powered tools and creative storytelling, AICraft aims to transform ideas into high-quality visual content that delivers impact and value. The platform is built on the belief that digital creativity can open doors to financial opportunities and empower individuals and businesses alike.</p>
+                    </div>
+
+                    <div class="vision-section reveal-right" style="transition-delay: 400ms;">
+                        <i class="ph ph-eye"></i>
+                        <h3>Our Vision</h3>
+                        <p>"To provide high-quality AI video production services to clients in Sri Lanka and around the world, delivering creative, impactful, and innovative digital content."</p>
+                    </div>
+
+                    <div class="info-cards">
+                        <div class="info-card reveal-left" style="transition-delay: 500ms;">
+                            <h3><i class="ph ph-video-camera"></i> Our Services</h3>
+                            <ul>
+                                <li>AI Video Creation</li>
+                                <li>Business Promotion Videos</li>
+                                <li>Educational Videos</li>
+                                <li>Social Media Reels</li>
+                                <li>Product Advertisements</li>
+                                <li>Custom Video Editing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card reveal-right" style="transition-delay: 600ms;">
+                            <h3><i class="ph ph-lightning"></i> Our Strengths</h3>
+                            <ul>
+                                <li>Fast and efficient service delivery</li>
+                                <li>Creative and unique ideas</li>
+                                <li>Use of modern AI technology</li>
+                                <li>Affordable and fair pricing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="margin-top: 0; padding: 40px 0; border-top: 1px solid var(--glass-border); text-align: center;">
+        <div class="container">
+            <p style="color: var(--text-secondary);">&copy; 2026 AICraft. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Custom reveal logic for this page to trigger animations on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const reveals = document.querySelectorAll('.reveal-left, .reveal-right');
+                reveals.forEach(el => el.classList.add('active'));
+            }, 100);
+            
+            // Re-apply sticky nav logic
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                    navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.3)';
+                } else {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.8)';
+                    navbar.style.boxShadow = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
