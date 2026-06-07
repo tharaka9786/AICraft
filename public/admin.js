@@ -3,8 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashboardSection = document.getElementById('dashboard-section');
     const loginBtn = document.getElementById('login-btn');
     const adminPassInput = document.getElementById('admin-pass');
+    const showPassToggle = document.getElementById('show-pass-toggle');
     
     let adminToken = '';
+
+    showPassToggle.addEventListener('change', () => {
+        adminPassInput.type = showPassToggle.checked ? 'text' : 'password';
+    });
 
     loginBtn.addEventListener('click', async () => {
         const pass = adminPassInput.value.trim();

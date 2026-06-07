@@ -42,7 +42,10 @@
             <h3>Authentication Required</h3>
             <p style="margin-bottom: 16px; color: var(--text-secondary);">Enter the admin password to manage videos.</p>
             <div class="form-group">
-                <input type="text" id="admin-pass" placeholder="Password">
+                <input type="password" id="admin-pass" placeholder="Password">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary); cursor: pointer; margin-top: 4px;">
+                    <input type="checkbox" id="show-pass-toggle" style="width: auto;"> Show Password
+                </label>
             </div>
             <button id="login-btn" class="btn-fluid">Login</button>
         </div>
