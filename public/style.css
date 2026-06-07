@@ -327,8 +327,8 @@ a {
     transition-timing-function: linear !important; /* Forces linear smooth scrolling */
 }
 .swiper-slide {
-    width: 200px; /* Even smaller fixed width for each video card */
-    max-width: 80vw; /* Responsive on small screens */
+    width: 100px; /* Micro size as requested */
+    max-width: 80vw;
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
@@ -342,9 +342,9 @@ a {
     box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
 .video-card-title {
-    padding: 12px;
+    padding: 8px;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.75rem; /* Smaller font to fit 100px card */
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
