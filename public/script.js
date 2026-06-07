@@ -1,4 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Auth UI Logic
+    function renderAuthUI() {
+        const token = localStorage.getItem('aicraft_token');
+        const desktopContainer = document.getElementById('desktop-auth-container');
+        const mobileContainer = document.getElementById('mobile-auth-container');
+        
+        if (token) {
+            if (desktopContainer) {
+                desktopContainer.innerHTML = `
+                    <a href="#" class="btn-outline">Dashboard</a>
+                    <a href="#" id="logout-btn-desktop" class="btn-solid" style="margin-left: 10px; background: rgba(255,255,255,0.1); color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 500;">Logout</a>
+                `;
+                document.getElementById('logout-btn-desktop').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('aicraft_token');
+                    window.location.reload();
+                });
+            }
+            if (mobileContainer) {
+                mobileContainer.innerHTML = `
+                    <a href="#" class="btn-outline" style="text-align: center;">Dashboard</a>
+                    <a href="#" id="logout-btn-mobile" class="btn-solid" style="background: rgba(255,255,255,0.1); color: white; padding: 0.75rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500;">Logout</a>
+                `;
+                document.getElementById('logout-btn-mobile').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('aicraft_token');
+                    window.location.reload();
+                });
+            }
+        }
+    }
+    renderAuthUI();
+
     // Mobile Menu Toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');

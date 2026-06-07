@@ -25,18 +25,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     authSection.style.display = 'none';
                     dashboardSection.style.display = 'block';
                     fetchVideos();
-                    fetchPrices();
+                    fetchAdminPrices();
+                    fetchAnalytics();
                 } else {
                     alert('Incorrect password! Please try again.');
                 }
-            } catch (error) {
-                console.error('Auth error:', error);
-                alert('Network error while checking password.');
+            } catch (err) {
+                alert('Login failed. Ensure the backend is running.');
             } finally {
                 loginBtn.innerText = 'Login';
             }
         }
     });
+
+    async function fetchAnalytics() {
+        try {
+            const res = await fetch('/api/admin/analytics', {
+                headers: { 'Authorization': adminToken }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('stat-visits').innerText = data.visits.toLocaleString();
+                document.getElementById('stat-users').innerText = data.users.toLocaleString();
+                document.getElementById('stat-videos').innerText = data.videos.toLocaleString();
+                document.getElementById('stat-ratings').innerText = data.ratings.toLocaleString();
+            }
+        } catch (err) {
+            console.error('Failed to fetch analytics', err);
+        }
+    }
 
     // --- Password Reset Flow ---
     const forgotPassLink = document.getElementById('forgot-pass-link');

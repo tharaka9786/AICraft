@@ -3,6 +3,10 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const path = require('path');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'aicraft_secret_jwt_key_fallback';
 
 const app = express();
 
@@ -45,6 +49,13 @@ pool.query(`
         password TEXT NOT NULL,
         secret_question TEXT NOT NULL,
         secret_answer TEXT NOT NULL
+    );
+    
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     INSERT INTO admin_settings (id, password, secret_question, secret_answer) 
     VALUES (1, 'aicraft_12@', 'What is the name of your first pet?', 'dog') 
@@ -281,6 +292,64 @@ app.put('/api/settings/prices', checkAuth, async (req, res) => {
     } catch (err) {
         console.error("Error updating prices: " + err.message);
         res.status(500).json({ error: "Failed to update prices." });
+    }
+});
+
+// --- Auth Endpoints ---
+app.post('/api/auth/signup', async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password || password.length < 6) {
+        return res.status(400).json({ error: "Invalid email or password (min 6 chars)." });
+    }
+    try {
+        const hash = await bcrypt.hash(password, 10);
+        await pool.query('INSERT INTO users (email, password_hash) VALUES ($1, $2)', [email, hash]);
+        
+        // Generate token immediately so they can log in
+        const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '7d' });
+        res.status(201).json({ message: "Account created successfully", token });
+    } catch (err) {
+        console.error("Signup error:", err.message);
+        if (err.code === '23505') return res.status(400).json({ error: "Email already in use." });
+        res.status(500).json({ error: "Failed to create account." });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) return res.status(401).json({ error: "Invalid credentials." });
+        
+        const user = result.rows[0];
+        const match = await bcrypt.compare(password, user.password_hash);
+        if (!match) return res.status(401).json({ error: "Invalid credentials." });
+        
+        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+        res.json({ message: "Login successful", token });
+    } catch (err) {
+        console.error("Login error:", err.message);
+        res.status(500).json({ error: "Login failed." });
+    }
+});
+
+// --- Admin Analytics Endpoint ---
+app.get('/api/admin/analytics', checkAuth, async (req, res) => {
+    try {
+        const usersCount = await pool.query('SELECT COUNT(*) FROM users');
+        const videosCount = await pool.query('SELECT COUNT(*) FROM videos');
+        const ratingsCount = await pool.query('SELECT COUNT(*) FROM ratings');
+        const visitsResult = await pool.query('SELECT total_visits FROM site_stats WHERE id = 1');
+        
+        res.json({
+            users: parseInt(usersCount.rows[0].count, 10),
+            videos: parseInt(videosCount.rows[0].count, 10),
+            ratings: parseInt(ratingsCount.rows[0].count, 10),
+            visits: visitsResult.rows.length > 0 ? visitsResult.rows[0].total_visits : 0
+        });
+    } catch (err) {
+        console.error("Analytics error:", err.message);
+        res.status(500).json({ error: "Failed to fetch analytics." });
     }
 });
 

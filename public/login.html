@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AICraft</title>
+    <link rel="stylesheet" href="style.css?v=12">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .auth-logo {
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .auth-logo img {
+            height: 48px;
+            width: auto;
+        }
+
+        .auth-toggle {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .auth-toggle button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-toggle button.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(235, 87, 87, 0.3);
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .auth-form.hidden {
+            display: none;
+        }
+
+        .auth-form .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .auth-form .form-group input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .auth-form .form-group input:focus {
+            outline: none;
+            border-color: rgba(235, 87, 87, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(235, 87, 87, 0.4);
+        }
+
+        .auth-error {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 1rem;
+            min-height: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow top-glow"></div>
+    <div class="bg-glow bottom-glow"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <a href="/" class="auth-logo">
+                <img src="logo.png" alt="AICraft" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\'><text x=\'5\' y=\'16\' fill=\'white\' font-family=\'sans-serif\' font-size=\'14\'>AI</text></svg>'">
+            </a>
+
+            <div class="auth-toggle">
+                <button id="tab-login" class="active">Log In</button>
+                <button id="tab-signup">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" required placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <div id="login-error" class="auth-error"></div>
+                <button type="submit" class="auth-btn">Sign In</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="auth-form hidden">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="signup-email" required placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signup-password" required placeholder="Min 6 characters">
+                </div>
+                <div id="signup-error" class="auth-error"></div>
+                <button type="submit" class="auth-btn">Create Account</button>
+            </form>
+            
+            <a href="/" class="back-link"><i class="ph ph-arrow-left"></i> Back to Home</a>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
