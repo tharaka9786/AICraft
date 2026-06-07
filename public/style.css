@@ -327,8 +327,8 @@ a {
     transition-timing-function: linear !important; /* Forces linear smooth scrolling */
 }
 .swiper-slide {
-    width: 280px; /* Smaller fixed width for each video card */
-    max-width: 85vw; /* Responsive on small screens */
+    width: 200px; /* Even smaller fixed width for each video card */
+    max-width: 80vw; /* Responsive on small screens */
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
@@ -342,10 +342,13 @@ a {
     box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
 .video-card-title {
-    padding: 16px;
+    padding: 12px;
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .video-iframe-container {
     position: relative;
