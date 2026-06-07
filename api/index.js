@@ -48,6 +48,10 @@ const checkAuth = (req, res, next) => {
 
 // --- API Routes ---
 
+app.get('/api/auth-check', checkAuth, (req, res) => {
+    res.status(200).json({ valid: true });
+});
+
 app.get('/api/ratings', async (req, res) => {
     try {
         const result = await pool.query(`SELECT * FROM ratings ORDER BY timestamp DESC`);

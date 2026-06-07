@@ -6,13 +6,29 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let adminToken = '';
 
-    loginBtn.addEventListener('click', () => {
+    loginBtn.addEventListener('click', async () => {
         const pass = adminPassInput.value.trim();
         if (pass) {
-            adminToken = pass;
-            authSection.style.display = 'none';
-            dashboardSection.style.display = 'block';
-            fetchVideos();
+            loginBtn.innerText = 'Verifying...';
+            try {
+                const response = await fetch('/api/auth-check', {
+                    headers: { 'Authorization': pass }
+                });
+                
+                if (response.ok) {
+                    adminToken = pass;
+                    authSection.style.display = 'none';
+                    dashboardSection.style.display = 'block';
+                    fetchVideos();
+                } else {
+                    alert('Incorrect password! Please try again.');
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                alert('Network error while checking password.');
+            } finally {
+                loginBtn.innerText = 'Login';
+            }
         }
     });
 
