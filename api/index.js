@@ -34,6 +34,11 @@ pool.query(`
         title TEXT,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+    CREATE TABLE IF NOT EXISTS site_stats (
+        id INTEGER PRIMARY KEY,
+        total_visits INTEGER DEFAULT 0
+    );
+    INSERT INTO site_stats (id, total_visits) VALUES (1, 0) ON CONFLICT (id) DO NOTHING;
 `).catch(err => console.error("Error creating tables: ", err));
 
 // Middleware for basic admin auth
@@ -124,6 +129,28 @@ app.delete('/api/videos/:id', checkAuth, async (req, res) => {
     } catch (err) {
         console.error("Error deleting video: " + err.message);
         res.status(500).json({ error: "Failed to delete video." });
+    }
+});
+
+app.get('/api/visits', async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT total_visits FROM site_stats WHERE id = 1`);
+        res.status(200).json({ total_visits: result.rows[0].total_visits });
+    } catch (err) {
+        console.error("Error fetching visits: " + err.message);
+        res.status(500).json({ error: "Failed to fetch visits." });
+    }
+});
+
+app.post('/api/visits', async (req, res) => {
+    try {
+        const result = await pool.query(
+            `UPDATE site_stats SET total_visits = total_visits + 1 WHERE id = 1 RETURNING total_visits`
+        );
+        res.status(200).json({ total_visits: result.rows[0].total_visits });
+    } catch (err) {
+        console.error("Error updating visits: " + err.message);
+        res.status(500).json({ error: "Failed to update visits." });
     }
 });
 

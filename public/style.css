@@ -789,3 +789,33 @@ a {
         padding: 32px;
     }
 }
+
+/* Visit Counter */
+.visit-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    backdrop-filter: blur(10px);
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+.visit-counter i {
+    color: var(--primary-blue);
+    font-size: 1.2rem;
+}
+.visit-counter:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    color: var(--text-primary);
+}
+.visit-count-display {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+}

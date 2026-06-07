@@ -351,4 +351,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchAndDisplayRatings();
     fetchAndDisplayVideos();
+
+    // Fetch and update total visits
+    async function updateVisits() {
+        try {
+            const apiUrl = window.location.origin.includes('localhost') 
+                ? 'http://localhost:3000/api/visits' 
+                : '/api/visits';
+                
+            const response = await fetch(apiUrl, { method: 'POST' });
+            if (response.ok) {
+                const data = await response.json();
+                const visitElements = document.querySelectorAll('.visit-count-display');
+                visitElements.forEach(el => {
+                    // Add comma formatting for large numbers
+                    el.innerText = parseInt(data.total_visits).toLocaleString();
+                });
+            }
+        } catch (error) {
+            console.error('Failed to update visits:', error);
+        }
+    }
+    updateVisits();
 });
