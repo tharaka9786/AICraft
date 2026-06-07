@@ -327,8 +327,8 @@ a {
     transition-timing-function: linear !important; /* Forces linear smooth scrolling */
 }
 .swiper-slide {
-    width: 100px; /* Micro size as requested */
-    max-width: 80vw;
+    width: 160px; /* Adjusted width for vertical cards */
+    max-width: 45vw;
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
@@ -342,9 +342,9 @@ a {
     box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
 .video-card-title {
-    padding: 8px;
+    padding: 12px;
     font-weight: 500;
-    font-size: 0.75rem; /* Smaller font to fit 100px card */
+    font-size: 0.85rem;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
@@ -353,7 +353,7 @@ a {
 .video-iframe-container {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    padding-bottom: 177.77%; /* 9:16 Aspect Ratio for Vertical Shorts/Reels */
 }
 .video-iframe-container iframe {
     position: absolute;
