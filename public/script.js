@@ -352,16 +352,26 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchAndDisplayRatings();
     fetchAndDisplayVideos();
 
-    // Fetch and update total visits
+    // Fetch and update total visits with session tracking
     async function updateVisits() {
         try {
             const apiUrl = window.location.origin.includes('localhost') 
                 ? 'http://localhost:3000/api/visits' 
                 : '/api/visits';
                 
-            const response = await fetch(apiUrl, { method: 'POST' });
+            // Check if this user has already been counted in this session
+            const hasVisited = sessionStorage.getItem('has_visited');
+            const method = hasVisited ? 'GET' : 'POST';
+                
+            const response = await fetch(apiUrl, { method: method });
             if (response.ok) {
                 const data = await response.json();
+                
+                // If it was a new visit, mark session so we don't count reloads
+                if (!hasVisited) {
+                    sessionStorage.setItem('has_visited', 'true');
+                }
+
                 const visitElements = document.querySelectorAll('.visit-count-display');
                 visitElements.forEach(el => {
                     // Add comma formatting for large numbers
