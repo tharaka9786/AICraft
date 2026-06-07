@@ -276,6 +276,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const videos = await response.json();
             
             const videoGrid = document.getElementById('public-video-grid');
+            
+            // Inject the pinned promotional video at the very beginning
+            videos.unshift({
+                platform: 'youtube',
+                youtube_id: 'S32ecAIHk48',
+                title: 'AICraft Promotional Video'
+            });
+
             if (videos.length === 0) {
                 videoGrid.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">New videos coming soon...</p>';
                 return;
