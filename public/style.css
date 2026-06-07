@@ -327,7 +327,8 @@ a {
     transition-timing-function: linear !important; /* Forces linear smooth scrolling */
 }
 .swiper-slide {
-    width: 10%; /* Reduced width to 10% as requested */
+    width: 240px; /* Restored to a visible width */
+    max-width: 70vw;
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
@@ -352,7 +353,7 @@ a {
 .video-iframe-container {
     position: relative;
     width: 100%;
-    padding-bottom: 100%; /* 1:1 Aspect Ratio (Square) */
+    padding-bottom: 177.77%; /* 9:16 Aspect Ratio (Tightly wraps vertical videos) */
 }
 .video-iframe-container iframe {
     position: absolute;
