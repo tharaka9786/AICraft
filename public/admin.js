@@ -37,6 +37,96 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Password Reset Flow ---
+    const forgotPassLink = document.getElementById('forgot-pass-link');
+    const resetSection = document.getElementById('reset-section');
+    const secretQuestionDisplay = document.getElementById('secret-question-display');
+    const resetBtn = document.getElementById('reset-btn');
+    const cancelResetBtn = document.getElementById('cancel-reset-btn');
+    const secretAnswerInput = document.getElementById('secret-answer');
+    const resetNewPassInput = document.getElementById('reset-new-pass');
+
+    forgotPassLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        authSection.style.display = 'none';
+        resetSection.style.display = 'block';
+        
+        try {
+            const res = await fetch('/api/secret-question');
+            if (res.ok) {
+                const data = await res.json();
+                secretQuestionDisplay.innerText = data.question;
+            } else {
+                secretQuestionDisplay.innerText = 'Failed to load question.';
+            }
+        } catch (error) {
+            secretQuestionDisplay.innerText = 'Network error.';
+        }
+    });
+
+    cancelResetBtn.addEventListener('click', () => {
+        resetSection.style.display = 'none';
+        authSection.style.display = 'block';
+    });
+
+    resetBtn.addEventListener('click', async () => {
+        const answer = secretAnswerInput.value.trim();
+        const newPassword = resetNewPassInput.value.trim();
+        if (!answer || newPassword.length < 4) {
+            alert('Please provide the answer and a password (min 4 chars).');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ answer, newPassword })
+            });
+            if (res.ok) {
+                alert('Password reset successfully! Please log in.');
+                resetSection.style.display = 'none';
+                authSection.style.display = 'block';
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Failed to reset password.');
+            }
+        } catch (error) {
+            alert('Network error.');
+        }
+    });
+
+    // --- Change Password Flow ---
+    const changePassBtn = document.getElementById('change-pass-btn');
+    const changePassInput = document.getElementById('change-pass-input');
+
+    changePassBtn.addEventListener('click', async () => {
+        const newPassword = changePassInput.value.trim();
+        if (newPassword.length < 4) {
+            alert('Password must be at least 4 chars.');
+            return;
+        }
+        try {
+            const res = await fetch('/api/change-password', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': adminToken
+                },
+                body: JSON.stringify({ newPassword })
+            });
+            if (res.ok) {
+                alert('Password updated successfully!');
+                adminToken = newPassword; // Update token in memory
+                changePassInput.value = '';
+            } else {
+                alert('Failed to update password.');
+            }
+        } catch (error) {
+            alert('Network error.');
+        }
+    });
+
     // Extract YouTube ID from URL
     function extractVideoID(url) {
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -44,18 +134,31 @@ document.addEventListener('DOMContentLoaded', () => {
         return (match && match[2].length === 11) ? match[2] : null;
     }
 
+    const videoPlatformSelect = document.getElementById('video-platform');
     const addVideoBtn = document.getElementById('add-video-btn');
     const ytUrlInput = document.getElementById('yt-url');
     const ytTitleInput = document.getElementById('yt-title');
 
     addVideoBtn.addEventListener('click', async () => {
+        const platform = videoPlatformSelect.value;
         const url = ytUrlInput.value.trim();
         const title = ytTitleInput.value.trim();
-        const videoId = extractVideoID(url);
-
-        if (!videoId) {
-            alert('Invalid YouTube URL');
-            return;
+        
+        let videoId = '';
+        let videoUrl = '';
+        
+        if (platform === 'youtube') {
+            videoId = extractVideoID(url);
+            if (!videoId) {
+                alert('Invalid YouTube URL');
+                return;
+            }
+        } else {
+            videoUrl = url;
+            if (!videoUrl) {
+                alert('Invalid Facebook URL');
+                return;
+            }
         }
 
         try {
@@ -65,7 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'Authorization': adminToken
                 },
-                body: JSON.stringify({ youtube_id: videoId, title: title })
+                body: JSON.stringify({ 
+                    youtube_id: videoId, 
+                    title: title,
+                    platform: platform,
+                    video_url: videoUrl
+                })
             });
 
             if (response.ok) {
@@ -99,12 +207,15 @@ document.addEventListener('DOMContentLoaded', () => {
             videos.forEach(video => {
                 const item = document.createElement('div');
                 item.className = 'video-item';
+                const platform = video.platform || 'youtube';
+                const thumbUrl = platform === 'youtube' ? `https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg` : 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/512px-2021_Facebook_icon.svg.png';
+                
                 item.innerHTML = `
                     <div class="video-info">
-                        <img src="https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg" alt="Thumbnail">
+                        <img src="${thumbUrl}" alt="Thumbnail" style="object-fit: cover; height: 67px;">
                         <div>
                             <h4>${video.title || 'Untitled Video'}</h4>
-                            <p style="font-size: 12px; color: var(--text-secondary);">ID: ${video.youtube_id}</p>
+                            <p style="font-size: 12px; color: var(--text-secondary);">Platform: ${platform}</p>
                         </div>
                     </div>
                     <i class="ph ph-trash delete-btn" data-id="${video.id}"></i>

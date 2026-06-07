@@ -39,15 +39,40 @@ pool.query(`
         total_visits INTEGER DEFAULT 0
     );
     INSERT INTO site_stats (id, total_visits) VALUES (1, 0) ON CONFLICT (id) DO NOTHING;
+    
+    CREATE TABLE IF NOT EXISTS admin_settings (
+        id INTEGER PRIMARY KEY,
+        password TEXT NOT NULL,
+        secret_question TEXT NOT NULL,
+        secret_answer TEXT NOT NULL
+    );
+    INSERT INTO admin_settings (id, password, secret_question, secret_answer) 
+    VALUES (1, 'aicraft_12@', 'What is the name of your first pet?', 'dog') 
+    ON CONFLICT (id) DO NOTHING;
 `).catch(err => console.error("Error creating tables: ", err));
 
+// Idempotently add platform and video_url columns to videos table
+pool.query(`ALTER TABLE videos ADD COLUMN platform TEXT DEFAULT 'youtube';`).catch(() => {});
+pool.query(`ALTER TABLE videos ADD COLUMN video_url TEXT;`).catch(() => {});
+
+
 // Middleware for basic admin auth
-const checkAuth = (req, res, next) => {
+const checkAuth = async (req, res, next) => {
     const pass = req.headers['authorization'];
-    if (pass === 'aicraft_12@') {
-        next();
-    } else {
-        res.status(401).json({ error: "Unauthorized. Incorrect password." });
+    try {
+        const result = await pool.query('SELECT password FROM admin_settings WHERE id = 1');
+        if (result.rows.length === 0) {
+            return res.status(500).json({ error: "Admin settings missing." });
+        }
+        const currentPassword = result.rows[0].password;
+        if (pass === currentPassword) {
+            next();
+        } else {
+            res.status(401).json({ error: "Unauthorized. Incorrect password." });
+        }
+    } catch (err) {
+        console.error("Auth error:", err);
+        res.status(500).json({ error: "Authentication failed." });
     }
 };
 
@@ -55,6 +80,50 @@ const checkAuth = (req, res, next) => {
 
 app.get('/api/auth-check', checkAuth, (req, res) => {
     res.status(200).json({ valid: true });
+});
+
+app.post('/api/change-password', checkAuth, async (req, res) => {
+    const { newPassword } = req.body;
+    if (!newPassword || newPassword.length < 4) {
+        return res.status(400).json({ error: "Password must be at least 4 characters." });
+    }
+    try {
+        await pool.query('UPDATE admin_settings SET password = $1 WHERE id = 1', [newPassword]);
+        res.status(200).json({ message: "Password updated successfully!" });
+    } catch (err) {
+        console.error("Error updating password:", err);
+        res.status(500).json({ error: "Failed to update password." });
+    }
+});
+
+app.get('/api/secret-question', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT secret_question FROM admin_settings WHERE id = 1');
+        res.status(200).json({ question: result.rows[0].secret_question });
+    } catch (err) {
+        console.error("Error fetching question:", err);
+        res.status(500).json({ error: "Failed to fetch question." });
+    }
+});
+
+app.post('/api/reset-password', async (req, res) => {
+    const { answer, newPassword } = req.body;
+    if (!newPassword || newPassword.length < 4) {
+        return res.status(400).json({ error: "Password must be at least 4 characters." });
+    }
+    try {
+        const result = await pool.query('SELECT secret_answer FROM admin_settings WHERE id = 1');
+        const correctAnswer = result.rows[0].secret_answer;
+        if (answer.toLowerCase().trim() === correctAnswer.toLowerCase().trim()) {
+            await pool.query('UPDATE admin_settings SET password = $1 WHERE id = 1', [newPassword]);
+            res.status(200).json({ message: "Password reset successfully!" });
+        } else {
+            res.status(401).json({ error: "Incorrect answer to secret question." });
+        }
+    } catch (err) {
+        console.error("Error resetting password:", err);
+        res.status(500).json({ error: "Failed to reset password." });
+    }
 });
 
 app.get('/api/ratings', async (req, res) => {
@@ -100,16 +169,19 @@ app.get('/api/videos', async (req, res) => {
 });
 
 app.post('/api/videos', checkAuth, async (req, res) => {
-    const { youtube_id, title } = req.body;
+    const { youtube_id, title, platform, video_url } = req.body;
     
-    if (!youtube_id) {
-        return res.status(400).json({ error: "YouTube ID is required." });
+    const platformVal = platform || 'youtube';
+    const finalIdOrUrl = (platformVal === 'youtube') ? youtube_id : video_url;
+    
+    if (!finalIdOrUrl) {
+        return res.status(400).json({ error: "Video ID or URL is required." });
     }
 
     try {
         const result = await pool.query(
-            `INSERT INTO videos (youtube_id, title) VALUES ($1, $2) RETURNING id`, 
-            [youtube_id, title || '']
+            `INSERT INTO videos (youtube_id, title, platform, video_url) VALUES ($1, $2, $3, $4) RETURNING id`, 
+            [youtube_id || '', title || '', platformVal, video_url || '']
         );
         res.status(201).json({ 
             message: "Video added successfully!", 

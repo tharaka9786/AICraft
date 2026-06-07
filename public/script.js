@@ -285,10 +285,20 @@ document.addEventListener('DOMContentLoaded', () => {
             
             videos.forEach((video, index) => {
                 const isExtra = index >= 3;
+                const platform = video.platform || 'youtube';
+                let iframeHtml = '';
+                
+                if (platform === 'youtube') {
+                    iframeHtml = `<iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                } else if (platform === 'facebook') {
+                    const encodedUrl = encodeURIComponent(video.video_url);
+                    iframeHtml = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&width=auto" style="border:none;overflow:hidden; height:100%; width:100%; position:absolute; top:0; left:0;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+                }
+
                 videosHtml += `
                     <div class="video-card reveal-left ${isExtra ? 'extra-video' : ''}" style="${isExtra ? 'display: none;' : ''}">
                         <div class="video-iframe-container">
-                            <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            ${iframeHtml}
                         </div>
                         <div class="video-card-title">${video.title || 'Video Project'}</div>
                     </div>

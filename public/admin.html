@@ -48,14 +48,48 @@
                 </label>
             </div>
             <button id="login-btn" class="btn-fluid">Login</button>
+            <div style="text-align: center; margin-top: 16px;">
+                <a href="#" id="forgot-pass-link" style="color: var(--accent-color); font-size: 14px;">Forgot Password?</a>
+            </div>
+        </div>
+
+        <div class="glass-panel" id="reset-section" style="display: none;">
+            <h3>Reset Password</h3>
+            <p id="secret-question-display" style="margin-bottom: 16px; color: var(--text-secondary);">Loading question...</p>
+            <div class="form-group">
+                <input type="text" id="secret-answer" placeholder="Your Answer">
+            </div>
+            <div class="form-group">
+                <input type="password" id="reset-new-pass" placeholder="New Password">
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <button id="reset-btn" class="btn-fluid">Reset</button>
+                <button id="cancel-reset-btn" class="btn-fluid" style="background: transparent; border: 1px solid var(--glass-border);">Cancel</button>
+            </div>
         </div>
 
         <div id="dashboard-section" style="display: none;">
             <div class="glass-panel">
-                <h3>Add New YouTube Video</h3>
+                <h3>Security Settings</h3>
                 <div class="form-group" style="margin-top: 16px;">
-                    <label>YouTube Video URL</label>
-                    <input type="text" id="yt-url" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <label>New Password</label>
+                    <input type="password" id="change-pass-input" placeholder="Enter new password (min 4 chars)">
+                </div>
+                <button id="change-pass-btn" class="btn-fluid" style="background: var(--glass-bg); border: 1px solid var(--glass-border);">Update Password</button>
+            </div>
+
+            <div class="glass-panel">
+                <h3>Add New Video</h3>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Platform</label>
+                    <select id="video-platform" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: white; outline: none;">
+                        <option value="youtube">YouTube</option>
+                        <option value="facebook">Facebook</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="url-label">Video URL or YouTube ID</label>
+                    <input type="text" id="yt-url" placeholder="e.g. https://www.youtube.com/watch?v=... or https://www.facebook.com/...">
                 </div>
                 <div class="form-group">
                     <label>Video Title (Optional)</label>
