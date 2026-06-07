@@ -282,11 +282,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             let videosHtml = '';
-            const initialVideos = videos.slice(0, 3);
             
-            initialVideos.forEach(video => {
+            videos.forEach((video, index) => {
+                const isExtra = index >= 3;
                 videosHtml += `
-                    <div class="video-card reveal-left">
+                    <div class="video-card reveal-left ${isExtra ? 'extra-video' : ''}" style="${isExtra ? 'display: none;' : ''}">
                         <div class="video-iframe-container">
                             <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
@@ -299,40 +299,50 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-trigger reveal logic for newly added items
             reveal(); 
 
-            // Add Show More button if there are more than 3 videos
+            // Add Show More/Less button if there are more than 3 videos
             if (videos.length > 3) {
-                const showMoreContainer = document.createElement('div');
-                showMoreContainer.style.textAlign = 'center';
-                showMoreContainer.style.marginTop = '24px';
-                showMoreContainer.style.gridColumn = '1 / -1'; // span full width of grid
+                const toggleContainer = document.createElement('div');
+                toggleContainer.style.textAlign = 'center';
+                toggleContainer.style.marginTop = '24px';
+                toggleContainer.style.gridColumn = '1 / -1'; // span full width of grid
 
-                const showMoreBtn = document.createElement('button');
-                showMoreBtn.className = 'btn-outline';
-                showMoreBtn.style.cursor = 'pointer';
-                showMoreBtn.innerHTML = 'Show More <i class="ph ph-caret-down"></i>';
+                const toggleBtn = document.createElement('button');
+                toggleBtn.className = 'btn-outline';
+                toggleBtn.style.cursor = 'pointer';
                 
-                showMoreBtn.addEventListener('click', () => {
-                    const remainingVideos = videos.slice(3);
-                    let extraHtml = '';
-                    remainingVideos.forEach(video => {
-                        extraHtml += `
-                            <div class="video-card reveal-left">
-                                <div class="video-iframe-container">
-                                    <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                                <div class="video-card-title">${video.title || 'Video Project'}</div>
-                            </div>
-                        `;
+                let isExpanded = false;
+                
+                const updateBtnText = () => {
+                    toggleBtn.innerHTML = isExpanded 
+                        ? 'Show Less <i class="ph ph-caret-up"></i>' 
+                        : 'Show More <i class="ph ph-caret-down"></i>';
+                };
+                updateBtnText();
+                
+                toggleBtn.addEventListener('click', () => {
+                    isExpanded = !isExpanded;
+                    updateBtnText();
+                    
+                    const extraVideos = videoGrid.querySelectorAll('.extra-video');
+                    extraVideos.forEach(card => {
+                        card.style.display = isExpanded ? 'block' : 'none';
+                        if (isExpanded) {
+                            card.classList.remove('active');
+                            setTimeout(() => reveal(), 50);
+                        }
                     });
                     
-                    showMoreContainer.remove(); // Remove button
-                    videoGrid.insertAdjacentHTML('beforeend', extraHtml); // Append rest
-                    
-                    setTimeout(() => reveal(), 50); // Trigger animation for new ones
+                    if (!isExpanded) {
+                        // Scroll back to the "Our Work" section if collapsed
+                        const section = document.getElementById('portfolio');
+                        if (section) {
+                            section.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
                 });
 
-                showMoreContainer.appendChild(showMoreBtn);
-                videoGrid.appendChild(showMoreContainer);
+                toggleContainer.appendChild(toggleBtn);
+                videoGrid.appendChild(toggleContainer);
             }
         } catch (error) {
             console.error('Failed to fetch videos:', error);
