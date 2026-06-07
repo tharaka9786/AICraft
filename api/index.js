@@ -193,6 +193,29 @@ app.post('/api/videos', checkAuth, async (req, res) => {
     }
 });
 
+app.put('/api/videos/:id', checkAuth, async (req, res) => {
+    const id = req.params.id;
+    const { youtube_id, title, platform, video_url } = req.body;
+    
+    const platformVal = platform || 'youtube';
+    const finalIdOrUrl = (platformVal === 'youtube') ? youtube_id : video_url;
+    
+    if (!finalIdOrUrl) {
+        return res.status(400).json({ error: "Video ID or URL is required." });
+    }
+
+    try {
+        await pool.query(
+            `UPDATE videos SET youtube_id = $1, title = $2, platform = $3, video_url = $4 WHERE id = $5`, 
+            [youtube_id || '', title || '', platformVal, video_url || '', id]
+        );
+        res.status(200).json({ message: "Video updated successfully!" });
+    } catch (err) {
+        console.error("Error updating video: " + err.message);
+        res.status(500).json({ error: "Failed to update video." });
+    }
+});
+
 app.delete('/api/videos/:id', checkAuth, async (req, res) => {
     const id = req.params.id;
     try {

@@ -218,9 +218,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p style="font-size: 12px; color: var(--text-secondary);">Platform: ${platform}</p>
                         </div>
                     </div>
-                    <i class="ph ph-trash delete-btn" data-id="${video.id}"></i>
+                    <div>
+                        <i class="ph ph-pencil-simple edit-btn" data-id="${video.id}" style="margin-right: 8px; cursor: pointer; color: var(--accent-color); font-size: 24px;"></i>
+                        <i class="ph ph-trash delete-btn" data-id="${video.id}"></i>
+                    </div>
                 `;
                 videoList.appendChild(item);
+            });
+
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const video = videos.find(v => v.id == id);
+                    if (video) openEditModal(video);
+                });
             });
 
             document.querySelectorAll('.delete-btn').forEach(btn => {
@@ -257,4 +268,83 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Network error');
         }
     }
+
+    // --- Edit Modal Logic ---
+    const editModal = document.getElementById('edit-video-modal');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const editVideoId = document.getElementById('edit-video-id');
+    const editVideoPlatform = document.getElementById('edit-video-platform');
+    const editVideoUrl = document.getElementById('edit-video-url');
+    const editVideoTitle = document.getElementById('edit-video-title');
+    const saveEditBtn = document.getElementById('save-edit-btn');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+    function openEditModal(video) {
+        editVideoId.value = video.id;
+        editVideoPlatform.value = video.platform || 'youtube';
+        editVideoUrl.value = (video.platform === 'facebook') ? video.video_url : `https://www.youtube.com/watch?v=${video.youtube_id}`;
+        editVideoTitle.value = video.title || '';
+        
+        editModal.style.display = 'block';
+        modalOverlay.style.display = 'block';
+    }
+
+    function closeEditModal() {
+        editModal.style.display = 'none';
+        modalOverlay.style.display = 'none';
+    }
+
+    cancelEditBtn.addEventListener('click', closeEditModal);
+    modalOverlay.addEventListener('click', closeEditModal);
+
+    saveEditBtn.addEventListener('click', async () => {
+        const id = editVideoId.value;
+        const platform = editVideoPlatform.value;
+        const url = editVideoUrl.value.trim();
+        const title = editVideoTitle.value.trim();
+
+        let videoId = '';
+        let videoUrl = '';
+        
+        if (platform === 'youtube') {
+            videoId = extractVideoID(url);
+            if (!videoId) {
+                alert('Invalid YouTube URL');
+                return;
+            }
+        } else {
+            videoUrl = url;
+            if (!videoUrl) {
+                alert('Invalid Facebook URL');
+                return;
+            }
+        }
+
+        try {
+            const response = await fetch(`/api/videos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': adminToken
+                },
+                body: JSON.stringify({ 
+                    youtube_id: videoId, 
+                    title: title,
+                    platform: platform,
+                    video_url: videoUrl
+                })
+            });
+
+            if (response.ok) {
+                closeEditModal();
+                fetchVideos();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to update video');
+            }
+        } catch (error) {
+            console.error('Error updating video:', error);
+            alert('Network error');
+        }
+    });
 });
