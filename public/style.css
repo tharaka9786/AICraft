@@ -327,8 +327,7 @@ a {
     transition-timing-function: linear !important; /* Forces linear smooth scrolling */
 }
 .swiper-slide {
-    width: 20%; /* As requested */
-    min-width: 150px; /* Prevents it from getting too tiny on mobile phones */
+    width: 10%; /* Reduced width to 10% as requested */
 }
 .video-card {
     background: rgba(255, 255, 255, 0.02);
