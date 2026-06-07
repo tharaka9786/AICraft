@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let videosHtml = '';
             videos.forEach(video => {
                 videosHtml += `
-                    <div class="video-card reveal">
+                    <div class="video-card reveal-left">
                         <div class="video-iframe-container">
                             <iframe src="https://www.youtube.com/embed/${video.youtube_id}" title="${video.title || 'YouTube video'}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
